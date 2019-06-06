@@ -1,0 +1,36 @@
+{
+  "name": "tfs-team-dashboard",
+  "version": "1.0.0",
+  "description": "create-reat-app to Webpack Babel Setup",
+  "main": "index.js",
+  "scripts": {
+    "start": "webpack-dev-server --open --mode development",
+    "dev": "webpack --mode development --progress",
+    "build": "webpack --mode production --progress"
+  },
+  "author": "JSGURU",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@babel/preset-react": "^7.0.0",
+    "babel-loader": "^8.0.6",
+    "css-loader": "^2.1.1",
+    "file-loader": "^3.0.1",
+    "style-loader": "^0.23.1",
+    "url-loader": "^2.0.0",
+    "webpack": "^4.33.0",
+    "webpack-cli": "^3.3.2",
+    "webpack-dev-server": "^3.5.1"
+  },
+  "babel": {
+    "presets": [
+      "@babel/env",
+      "@babel/react"
+    ]
+  }
+}
