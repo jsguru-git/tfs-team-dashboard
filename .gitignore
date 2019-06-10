@@ -15,6 +15,9 @@ build/
 [Bb]in/
 [Oo]bj/
 
+# NuGet Packages Directory
+## TODO: If you have NuGet Package Restore enabled, uncomment the next line
+packages/
 # Enable "build/" folder in the NuGet Packages folder since NuGet packages use it for MSBuild targets
 !packages/*/build/
 
@@ -95,9 +98,7 @@ publish/
 # Publish Web Output
 *.Publish.xml
 
-# NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
+
 
 # Windows Azure Build Output
 csx
@@ -157,3 +158,5 @@ $RECYCLE.BIN/
 
 # dependencies
 tfs-team-dashboard/node_modules
+
+tfs-team-dashboard/dist

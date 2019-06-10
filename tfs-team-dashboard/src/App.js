@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DTable from './components/DTable';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 
@@ -9,15 +10,15 @@ class App extends Component {
 
     this.state = {
       userName: 'Said Alghamidi',
-      projects: [['Project 1 Name', '#'], ['Project 2 Name', '#'], ['Project 3 Name', '#']],
+      projects: [/*{name: 'Project 1 Name', url: '#'}, {name: 'Project 2 Name', url: '#'}, {name: 'Project 3 Name', url: '#'}*/],
       contrTable: {
         title: 'Contribution',
         headings: ['Duration', 'Completed Tasks', 'Commits', 'Successful Builds', 'Failed Builds'],
         rows: [
           ['Last 24 Hours', 16, 11, 8, 2],
-          ['Last 24 Hours', 16, 11, 8, 2],
-          ['Last 24 Hours', 16, 11, 8, 2],
-          ['Last 24 Hours', 16, 11, 8, 2],
+          ['Past Week', 16, 11, 8, 2],
+          ['Past Month', 16, 11, 8, 2],
+          ['Past Year', 16, 11, 8, 2],
         ]
       },
       commTable: {
@@ -42,6 +43,109 @@ class App extends Component {
       }
     }
   }
+  base64EncodedPAT(userName, pat) {
+    let rawData = `${userName}:${pat}`;
+    let buff = new Buffer(rawData);
+    let base64Data = buff.toString('base64');
+    return base64Data
+  }
+  async getCommits(repoArr, criteriaObj) {
+    const commitsArr2d = await Promise.all(
+      repoArr.map(function(repo) {
+        return axios.get(`http://192.168.154.133/DefaultCollection/${repo.project.id}/_apis/git/repositories/${repo.id}/commits`,
+            {
+              params: {
+                'api-version': 4.1,
+                ...criteriaObj
+              }
+            }
+          ).then((res) => { 
+            return res.data.value.map((commit) => {
+              commit.projectName = repo.project.name; 
+              return commit;
+            })
+          })
+      })
+    );
+    const commits = [].concat(...commitsArr2d);
+    return commits;
+  }
+  async componentDidMount() {
+    var self = this;
+    let uName = "";
+    let pat = "iegwlaffn5lc4suuhzsbvwsysr7qzgya7pn4ybqppbgdjxrevsmq";
+    let base64Token = self.base64EncodedPAT(uName, pat);
+    axios.defaults.headers = {
+      'Content-Type': 'application/json',
+      Authorization: `Basic ${base64Token}`
+    }
+    // Fetch All Projects Which Working On
+    const response = await axios.get('http://192.168.154.133/DefaultCollection/_apis/projects',
+        {
+          params: {
+            'api-version': 4.1
+          }
+        }
+      );
+    const projects = response.data.value;
+    self.setState({projects: projects});
+
+    // Fetch All Repositories.
+    const reposArr2d = await Promise.all(
+      projects.map(function(project) {
+        return axios.get(`http://192.168.154.133/DefaultCollection/${project.id}/_apis/git/repositories`,
+            {
+              params: {
+                'api-version': 4.1
+              }
+            }
+          ).then((res) => res.data.value)    
+      })
+    );
+
+    const repositories = [].concat(...reposArr2d);
+    
+    // Fetch commits
+    // ** Last 24 hours
+    const today = new Date();
+    let yesterday = new Date(today.getTime());
+    yesterday.setDate(today.getDate() - 1);
+    const last24Hours = {
+      'searchCriteria.fromDate': yesterday.toISOString()
+    }
+    const last24Hours_commits = await self.getCommits(repositories, last24Hours);
+    console.log("commits", last24Hours_commits);
+
+    // ** Past Week
+    let lastWeekToday = new Date(today.getTime());
+    lastWeekToday.setDate(today.getDate() - 7);
+    const pastWeek = {
+      'searchCriteria.fromDate': lastWeekToday.toISOString()
+    }
+    const pastWeek_commits = await self.getCommits(repositories, pastWeek);
+
+    console.log("commits", pastWeek_commits);
+
+    // ** Past Month
+    let lastMonthToday = new Date(today.getTime());
+    lastMonthToday.setMonth(today.getMonth() - 1);
+    const pastMonth = {
+      'searchCriteria.fromDate': lastMonthToday.toISOString()
+    }
+    const pastMonth_commits = await self.getCommits(repositories, pastMonth);
+
+    console.log("commits", pastMonth_commits);
+
+    // ** Past Year
+    let lastYearToday = new Date(today.getTime());
+    lastYearToday.setFullYear(today.getFullYear() - 1);
+    const pastYear = {
+      'searchCriteria.fromDate': lastYearToday.toISOString()
+    }
+    const pastYear_commits = await self.getCommits(repositories, pastYear);
+
+    console.log("commits", pastYear_commits);
+  }
   render() {
     const {userName, projects, contrTable, commTable, complTable} = this.state;
     return (
@@ -58,7 +162,7 @@ class App extends Component {
               <p className="info">Member of: {
                 projects.map((item, index) => {
                   let buffer = []
-                  var project = Array.isArray(item)? (<a key={`project-${index}`} href={item[1]}>{item[0]}</a>) : (item);
+                  var project = <a key={`project-${index}`} href={item.url}>{item.name}</a>;
                   if (index) buffer.push(", ");
                   buffer.push(project)
                   return buffer
