@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import DTable from './components/DTable';
+import CommitTable from './components/CommitTable';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
@@ -10,7 +11,7 @@ class App extends Component {
 
     this.state = {
       userName: 'Said Alghamidi',
-      projects: [/*{name: 'Project 1 Name', url: '#'}, {name: 'Project 2 Name', url: '#'}, {name: 'Project 3 Name', url: '#'}*/],
+      projects: [],
       contrTable: {
         title: 'Contribution',
         headings: ['Duration', 'Completed Tasks', 'Commits', 'Successful Builds', 'Failed Builds'],
@@ -21,16 +22,7 @@ class App extends Component {
           ['Past Year', 16, 11, 8, 2],
         ]
       },
-      commTable: {
-        title: 'Commits (Last 30 Days)',
-        headings: ['Project', 'Commit Id', 'Date', 'Description'],
-        rows: [
-          [['Project Name', '#'], ['3d3f5', '#'], '12 May 2019 23:12', 'Commit description'],
-          [['Project Name', '#'], ['3d3f5', '#'], '12 May 2019 23:12', 'Commit description'],
-          [['Project Name', '#'], ['3d3f5', '#'], '12 May 2019 23:12', 'Commit description'],
-          [['Project Name', '#'], ['3d3f5', '#'], '12 May 2019 23:12', 'Commit description'],
-        ]
-      },
+      commTableRows: [],
       complTable: {
         title: 'Completed Work Items (Last 7 Days)',
         headings: ['Project', 'Work Item Id', 'Date', 'Type', 'Title'],
@@ -61,7 +53,8 @@ class App extends Component {
             }
           ).then((res) => { 
             return res.data.value.map((commit) => {
-              commit.projectName = repo.project.name; 
+              commit.projectName = repo.project.name;
+              commit.projectUrl = repo.project.url.replace('/_apis/projects', '');
               return commit;
             })
           })
@@ -87,8 +80,11 @@ class App extends Component {
           }
         }
       );
-    const projects = response.data.value;
-    self.setState({projects: projects});
+    let projects = response.data.value;
+    projects = projects.map((proj) => {
+      proj.projectUrl = proj.url.replace('/_apis/projects', '');
+      return proj;
+    })
 
     // Fetch All Repositories.
     const reposArr2d = await Promise.all(
@@ -145,9 +141,13 @@ class App extends Component {
     const pastYear_commits = await self.getCommits(repositories, pastYear);
 
     console.log("commits", pastYear_commits);
+    self.setState({
+      projects: projects,
+      commTableRows: pastMonth_commits,
+    });
   }
   render() {
-    const {userName, projects, contrTable, commTable, complTable} = this.state;
+    const {userName, projects, contrTable, commTableRows, complTable} = this.state;
     return (
       <div className="App">
         <div className="container">
@@ -162,7 +162,7 @@ class App extends Component {
               <p className="info">Member of: {
                 projects.map((item, index) => {
                   let buffer = []
-                  var project = <a key={`project-${index}`} href={item.url}>{item.name}</a>;
+                  var project = <a key={`project-${index}`} href={item.projectUrl}>{item.name}</a>;
                   if (index) buffer.push(", ");
                   buffer.push(project)
                   return buffer
@@ -173,7 +173,7 @@ class App extends Component {
               <DTable title={contrTable.title} headings={contrTable.headings} rows={contrTable.rows} />
             </div>
             <div className="section-wrapper">
-              <DTable title={commTable.title} headings={commTable.headings} rows={commTable.rows} />
+              <CommitTable rows={commTableRows} />
             </div>
             <div className="section-wrapper">
               <DTable title={complTable.title} headings={complTable.headings} rows={complTable.rows} />
