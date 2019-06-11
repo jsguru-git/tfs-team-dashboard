@@ -44,7 +44,7 @@ class App extends Component {
   async getCommits(repoArr, criteriaObj) {
     const commitsArr2d = await Promise.all(
       repoArr.map(function(repo) {
-        return axios.get(`http://192.168.154.133/DefaultCollection/${repo.project.id}/_apis/git/repositories/${repo.id}/commits`,
+        return axios.get(`http://jsguru-tfs/DefaultCollection/${repo.project.id}/_apis/git/repositories/${repo.id}/commits`,
             {
               params: {
                 'api-version': 4.1,
@@ -73,7 +73,7 @@ class App extends Component {
       Authorization: `Basic ${base64Token}`
     }
     // Fetch All Projects Which Working On
-    const response = await axios.get('http://192.168.154.133/DefaultCollection/_apis/projects',
+    const response = await axios.get('http://jsguru-tfs/DefaultCollection/_apis/projects',
         {
           params: {
             'api-version': 4.1
@@ -89,7 +89,7 @@ class App extends Component {
     // Fetch All Repositories.
     const reposArr2d = await Promise.all(
       projects.map(function(project) {
-        return axios.get(`http://192.168.154.133/DefaultCollection/${project.id}/_apis/git/repositories`,
+        return axios.get(`http://jsguru-tfs/DefaultCollection/${project.id}/_apis/git/repositories`,
             {
               params: {
                 'api-version': 4.1
