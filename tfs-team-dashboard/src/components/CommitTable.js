@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TextTruncate from 'react-text-truncate';
-import ReactTooltip from 'react-tooltip'
+import ReactTooltip from 'react-tooltip';
 import Moment from 'react-moment';
 
 export default class CommitTable extends Component {
