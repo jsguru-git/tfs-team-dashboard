@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactToPrint from 'react-to-print';
 import ContribTable from './components/ContribTable';
 import CommitTable from './components/CommitTable';
 import WorkItmTable from './components/WorkItmTable';
@@ -116,8 +117,8 @@ class App extends Component {
     let contribTblData = [
                           {period: 'Last 24 Hours', sBuilds: 8, fBuilds: 2},
                           {period: 'Past Week', sBuilds: 8, fBuilds: 2},
-                          {period: 'Last 24 Hours', sBuilds: 8, fBuilds: 2},
-                          {period: 'Last 24 Hours', sBuilds: 8, fBuilds: 2}
+                          {period: 'Past Month', sBuilds: 8, fBuilds: 2},
+                          {period: 'Past Year', sBuilds: 8, fBuilds: 2}
                         ];
     // Fetch Completed Tasks
     const periodArr = [1, 7, 30, 365];
@@ -223,7 +224,13 @@ class App extends Component {
             <img src={logo} className="App-logo" alt="logo" />
             <h2>Welcome to The TFS Team Dashboard</h2>
           </div>
-          <div className="App-intro">
+          <div className="App-print">
+            <ReactToPrint
+              trigger={() => <a href="#">Print this out!</a>}
+              content={() => this.printAreaRef}
+            />
+          </div>
+          <div className="App-intro" ref={el => (this.printAreaRef = el)}>
             <div className="section-wrapper">
               <p className="info"><span className="title">{userName}</span></p>
               <p className="info">Email: <span>said_alghamidi@hotmail.com</span></p>
@@ -238,7 +245,6 @@ class App extends Component {
               }</p>
             </div>
             <div className="section-wrapper">
-              {/* <DTable title={contrTable.title} headings={contrTable.headings} rows={contrTable.rows} /> */}
               <ContribTable rows={contribTableRows} />
             </div>
             <div className="section-wrapper">

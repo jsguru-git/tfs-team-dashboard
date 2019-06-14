@@ -67,16 +67,25 @@ tbody tr td:first-child > *:not(a)  {
   .container {
     max-width: 750px;
   }
+  .App-intro {
+    padding: 20px 40px;
+  }
 }
 
 @media (min-width: 992px) and (max-width: 1199px) {
   .container {
     width: 970px;
   }
+  .App-intro {
+    padding: 20px 50px;
+  }
 }
 
 @media (min-width: 1200px) {
   .container {
     width: 1170px;
+  }
+  .App-intro {
+    padding: 20px 60px;
   }
 }

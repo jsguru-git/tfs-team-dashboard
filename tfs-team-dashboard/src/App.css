@@ -14,6 +14,11 @@
   color: white;
 }
 
+.App-print {
+  font-size: 1.2rem;
+  padding: 10px 0;
+}
+
 .App-intro {
   font-size: large;
   padding: 20px;
