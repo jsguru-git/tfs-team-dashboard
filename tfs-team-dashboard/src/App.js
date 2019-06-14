@@ -167,7 +167,8 @@ class App extends Component {
     const commitArr2d = await Promise.all(
       timeStampArr.map((timeStamp) => {
         const searchTerms = {
-          'searchCriteria.fromDate': timeStamp.toISOString()
+          'searchCriteria.fromDate': timeStamp.toISOString(),
+          'searchCriteria.author': user
         }
         return self.getCommits(repositories, searchTerms);
       })
