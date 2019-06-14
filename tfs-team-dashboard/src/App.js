@@ -1,29 +1,20 @@
 import React, { Component } from 'react';
-import DTable from './components/DTable';
 import ContribTable from './components/ContribTable';
 import CommitTable from './components/CommitTable';
 import WorkItmTable from './components/WorkItmTable';
+import * as qs from 'query-string';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
+import tokens from './user-pats.json';
 
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      userName: 'Said Alghamidi',
+      userName: '',
       projects: [],
-      // contrTable: {
-      //   title: 'Contribution',
-      //   headings: ['Duration', 'Completed Tasks', 'Commits', 'Successful Builds', 'Failed Builds'],
-      //   rows: [
-      //     ['Last 24 Hours', 16, 11, 8, 2],
-      //     ['Past Week', 16, 11, 8, 2],
-      //     ['Past Month', 16, 11, 8, 2],
-      //     ['Past Year', 16, 11, 8, 2],
-      //   ]
-      // },
       contribTableRows: [],
       commTableRows: [],
       complTableRows: [],
@@ -89,8 +80,19 @@ class App extends Component {
   }
   async componentDidMount() {
     var self = this;
+
+    var params = qs.parse(self.props.location.search);
+    var user = params.user;
+    if (!user) {
+      alert("User name must be specifed as url param. For example, ?user=jsguru");
+      return;
+    }
+    let pat = tokens[user];
+    if (!pat) {
+      alert(`User '${user}' is not member of our TFS.`);
+      return;
+    }
     let uName = "";
-    let pat = "iegwlaffn5lc4suuhzsbvwsysr7qzgya7pn4ybqppbgdjxrevsmq";
     let base64Token = self.base64EncodedPAT(uName, pat);
     axios.defaults.headers = {
       'Content-Type': 'application/json',
@@ -204,6 +206,7 @@ class App extends Component {
     console.log("work items details", workItemsInfos);
 
     self.setState({
+      userName: user,
       projects: projects,
       contribTableRows: contribTblData,
       commTableRows: commitArr2d[2],
