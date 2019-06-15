@@ -1,5 +1,6 @@
 .App {
   /* text-align: center; */
+  background: #bedbf8;
 }
 
 .App-logo {
@@ -16,7 +17,9 @@
 
 .App-print {
   font-size: 1.2rem;
-  padding: 10px 0;
+  padding: 10px 2%;
+  display: flex;
+  justify-content: flex-end;
 }
 
 .App-intro {

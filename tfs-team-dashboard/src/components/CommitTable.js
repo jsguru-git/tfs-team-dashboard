@@ -30,9 +30,9 @@ export default class CommitTable extends Component {
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`}>
-                <td><a href={row.projectUrl}>{row.projectName}</a></td>
+                <td><a href={row.projectUrl} target="_blank">{row.projectName}</a></td>
                 <td>
-                  <a href={row.remoteUrl} data-tip data-for={`commitId-${rowIndex}`}>
+                  <a href={row.remoteUrl} data-tip data-for={`commitId-${rowIndex}`} target="_blank">
                     <TextTruncate 
                       line={1}
                       truncateText="..."

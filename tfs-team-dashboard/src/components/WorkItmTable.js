@@ -28,9 +28,9 @@ export default class WorkItmTable extends Component {
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={`row-${rowIndex}`}>
-                <td><a href={row._links.workItemType.href.split('/_apis')[0]}>{row.fields['System.TeamProject']}</a></td>
+                <td><a href={row._links.workItemType.href.split('/_apis')[0]} target="_blank">{row.fields['System.TeamProject']}</a></td>
                 <td>
-                  <a href={row._links.html.href}>{row.id}</a>
+                  <a href={row._links.html.href} target="_blank">{row.id}</a>
                 </td>
                 <td><Moment format='D MMM YYYY h:mm'>{row.fields['Microsoft.VSTS.Common.ResolvedDate']}</Moment></td>
                 <td>{row.fields['System.WorkItemType']}</td>
