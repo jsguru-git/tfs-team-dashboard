@@ -1,3 +1,5 @@
+var tfsUrl = 'http://jsguru-tfs'
+
 var PAT = {
   jsguru: "iegwlaffn5lc4suuhzsbvwsysr7qzgya7pn4ybqppbgdjxrevsmq",
   collaborator1: "7yauqrgwi3ixm4yhprrnrecabffnvwvf5mtd6dppepglq2vs2v2a",
@@ -10,4 +12,4 @@ var gitUser = {
   collaborator2: "collaborator2"
 };
 
-export {PAT, gitUser};
+export {tfsUrl, PAT, gitUser};

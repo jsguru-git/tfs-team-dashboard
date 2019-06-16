@@ -7,14 +7,13 @@ import * as qs from 'query-string';
 import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
-import {PAT, gitUser} from './user-infos.js';
+import {tfsUrl,PAT, gitUser} from './user-infos.js';
 
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      tfsUrl: 'http://jsguru-tfs',
       userName: '',
       userEmail: '',
       projects: [],
@@ -41,14 +40,12 @@ class App extends Component {
     return wiql;
   }
   async getUserProfile() {
-    const {tfsUrl} = this.state;
     const response = await axios.get(`${tfsUrl}/DefaultCollection/_api/_common/GetUserProfile?__v=5`);
     let name = response.data.providerDisplayName;
     let email = response.data.userPreferences.PreferredEmail;
     return {name, email};
   }
   async getProjects(collectionArr) {
-    const {tfsUrl} = this.state;
     const projArr2d = await Promise.all(
       collectionArr.map(function(collection) {
         // [API format]: http://{instance}/{collectionName}/_apis/projects
@@ -132,7 +129,6 @@ class App extends Component {
   }
   async componentDidMount() {
     var self = this;
-    var {tfsUrl} = self.state;
     var params = qs.parse(self.props.location.search);
     var user = params.user;
     if (!user) {
