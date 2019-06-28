@@ -12,3 +12,11 @@ TFS(Team Foundation Server) Monitoring Tool
 ## Front-end
 
 - React
+
+## Configuration file
+
+- tfs-team-dashboard/src/user-infos.js
+
+## Dashboard
+
+![dashboard](./screenshot.jpeg)
